@@ -1,0 +1,47 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+
+            <div class="manage-head">
+                <h6 class="padding-left manage-head-con">订单信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+            </div>
+
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">基本信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w25">订单编号：<span>{$info.order_sn}</span></div>
+                    <div class="td w25">订单状态：<span>{$info.state|expressState}</span></div>
+                    <div class="td w25">运费：<span>{:round($info['freight']/100,2)} 元</span></div>
+                    <div class="td w25">支付状态：<span><eq name='info.paystate' value='1'>已支付<else/>未支付</eq></span></div>
+                    <div class="td w100">包裹描述：{$info.items}</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w25">发货人：<span>{$info.fromuser}</span></div>
+                    <div class="td w25">联系电话：{$info.frommobile}</div>
+                    <div class="td w50">发货地址：{$info.fromaddress}</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w25">收货人：<span>{$info.touser}</span></div>
+                    <div class="td w25">联系电话：<span>{$info.tomobile}</span></div>
+                    <div class="td w50">收货地址：<span>{$info.toaddress}</span></div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w100">
+                        <eq name='info.state' value='1'>
+                            <button id='refuse'>拒绝订单</button>
+                            <button id='through'>通过审核</button>
+                        </eq>
+                    </div>
+                </div>
+            </div>
+
+           
+
+        </div>
+    </div>
+
+</block>

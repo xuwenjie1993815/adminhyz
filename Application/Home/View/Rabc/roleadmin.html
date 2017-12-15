@@ -1,0 +1,101 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="tr-th clearfix padding-top text-center">
+                <div class="td padding-left-15 strong">
+                    <input type='button' value='添加角色' data-url="__URL__/roleAdd/id/{$item['id']}" onclick="open_layer(this, '添加角色', '50%', '200px')" class='button submit-order bg-mix padding-top-10' name='memo'/>
+                </div>
+        </div>
+            <div class="table-margin ">
+                <notempty  name="list">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+                            <th class="w10">排序</th>
+                            <th class="w10">角色名</th>
+                            <th class="w15">操作</th>
+                        </tr>
+
+                        <tbody id="itemContainer">
+                        <volist name="list" id="item">
+                            <tr class="list">
+                                <td>{$i}</td>
+                                <td>{$item.nick_name}</td>
+                                <if condition="$item.id eq 1">
+                                <td>
+                                    <a href="javascript:void(0)" data-url="__URL__/roleEditInfo/id/{$item['id']}" onclick="open_layer(this, '请输入菜单名称', '50%', '340px')"  class="btn btn-warning btn-small">修改</a>
+                                    | <a href="javascript:void(0)" class="btn btn-info btn-small use" data-url="__URL__/adminList/id/{$item['id']}" onclick="open_layer(this, '登录用户', '50%', '340px')">登录用户</a>
+                                    | <a href="javascript:void(0)" class="btn btn-info btn-small use" data-url="__URL__/adminAdd/id/{$item['id']}" onclick="open_layer(this, '添加用户', '50%', '340px')">添加用户</a>
+                                </td>
+                                <else />
+                                <td>
+                                    <a href="javascript:void(0)" data-url="__URL__/roleEditInfo/id/{$item['id']}" onclick="open_layer(this, '请输入菜单名称', '50%', '340px')"  class="btn btn-warning btn-small">修改</a>
+                                    | <a href="javascript:void(0)" class="btn btn-info btn-small use" data-url="__URL__/adminList/id/{$item['id']}" onclick="open_layer(this, '登录用户', '50%', '340px')">登录用户</a>
+                                    | <a href="javascript:void(0)" class="btn btn-info btn-small use" data-url="__URL__/adminAdd/id/{$item['id']}" onclick="open_layer(this, '添加用户', '50%', '340px')">添加用户</a>
+                                    | <a  href="__URL__/roleList/role_id/{$item['id']}" class="btn btn-success use" onClick="javascript:return del('{$item.id}')">设置权限</a>
+                                </td>
+                            </if>
+                                
+                            </tr>
+                        </volist>
+                        </tbody>
+
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:18px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+            <!-- fpage -->
+            <div class="page">{$fpage}</div>
+        </div>
+    </div>
+
+    <script>
+
+        function del($id){
+            $.ajax({
+                type:'POST',
+                url:"{:U('MenuDel')}",
+                data:{'id':$id},
+                dataType:'json',
+                success:function(obj) {
+                    layer.msg(data.msg);
+
+                    if(data.status)
+                    {
+                        setTimeout(function() {window.parent.close_layer(data.msg);}, 700)
+                    }
+                }
+            });
+        }
+        
+        function open_layer(obj, title, width, height) {
+            var url = $(obj).data('url');
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                skin: 'layui-layer-title-jxc',
+                area: [width, height],
+                content:url,
+            });
+        }
+        
+        function close_layer(msg) {
+            if (msg) {
+                setTimeout(function () {
+                    layer.closeAll('iframe');
+                }, 500);
+                layer.msg(msg);
+                window.location.reload();
+            } else {
+                layer.closeAll('iframe');
+            }
+        }
+
+    </script>
+
+
+</block>
+

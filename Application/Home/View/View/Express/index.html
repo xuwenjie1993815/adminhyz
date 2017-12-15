@@ -1,0 +1,71 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="search_style table-margin">
+                <div class="title_names text-blue">货物快递列表</div>
+                <form action="{:U('','','html',true)}" method="post">
+                <ul class="search_content clearfix">
+                    <li class='w30'>
+                        <input type="text" placeholder="请输入订单号" value="" name='keywords' class="w100 height34 border">
+                    </li>
+
+                    <li class=''><button class="btn_search button bg-blue" id="search"><i class="fa fa-search"></i> 搜索</button></li>
+                </ul>
+                </form>
+            </div>
+
+            <div class="table-margin ">
+                <notempty  name="data">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+                            <th class="w5">#</th>
+                            <th class="w15">订单编号</th>
+                            <th>状态</th>
+                            <th>发货人</th>
+                            <th>发货人电话</th>
+                            <th>收货人</th>
+                            <th>收货人电话</th>
+                            <th>运费（元）</th>
+                            <th class="w15">发布时间</th>
+                            <th>操作</th>
+                        </tr>
+                        
+
+                        <tbody id="itemContainer">
+                        <volist name="data" id="item">
+                            <tr class="list">
+                                <td>{$i}</td>
+                                <td>{$item.order_sn}</td>
+                                <td>{$item.state|expressState}</td>
+                                <td>{$item.fromuser}</td>
+                                <td>{$item.frommobile}</td>
+                             
+                                <td>{$item.touser}</td>
+                                <td>{$item.tomobile}</td>
+                           
+                                <td>{:round($item['money']/100,2)}</td>
+                                <td>{$item.createtime}</td>
+                                <td>
+                                    <a href="{:U('details',array('id'=>$item['id']),'html',true)}" class="btn btn-success">查看详情</a>
+                                </td>
+                            </tr>
+                         
+                        </volist>
+                        </tbody>
+
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:18px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+            <!-- fpage -->
+            <div class="page">{$page}</div>
+        </div>
+    </div>
+
+
+
+
+</block>
+

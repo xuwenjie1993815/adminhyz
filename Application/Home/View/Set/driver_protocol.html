@@ -1,0 +1,65 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <form id="ff">
+            <div class="info-center">
+
+                <div class="manage-head">
+                    <h6 class="padding-left manage-head-con">用户协议</h6>
+                </div>
+
+                <div class=" input-table table-margin clearfix ">
+                    <script id="container" name="content" style="border:0" type="text/plain">{$driver_protocol}</script>
+                </div>
+
+                <!--操作按钮 start-->
+                <div class="text-center padding-top">
+                    <div class="td w80">
+                        <button type="button" class="button bg-blue inlib-product" id="sub">提交</button>
+                    </div>
+                </div>
+                <!--操作按钮 end -->
+            </div>
+        </form>
+    </div>
+
+    <script src="__ROOT__/Public/default/ueditor/ueditor.config.js"></script>
+    <script src="__ROOT__/Public/default/ueditor/ueditor.all.min.js"></script>
+<script>
+    var ue = UE.getEditor('container');
+
+
+
+    $(function() {
+
+        $('body').on('click', '#sub', function() {
+
+            var _this = $(this);
+
+            ue.ready(function () {
+                html = ue.getContent();
+                txt = ue.getContentTxt();
+            });
+
+            if(txt == ''){
+                layer.msg('请编辑协议内容');
+                return false;
+            }
+
+            $.ajax({
+                type:'POST',
+                data:{'protocol':html},
+                dataTypre:'json',
+                beforeSend:function() { _this.prop('disabled', 'true'); },
+                success:function(obj) { layer.msg(obj.msg); },
+                complete:function() { _this.prop('disabled', ''); },
+                error:function() { layer.msg('系统繁忙'); }
+            });
+
+        });
+
+    })
+</script>
+
+</block>

@@ -1,0 +1,39 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="view-product">
+            <form id="ff">
+                <div class="info-center">
+                    <div class="manage-head">
+                        <h6 class="padding-left manage-head-con">我的信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+                    </div>
+
+                    <div class="offcial-table input-table table-margin clearfix ">
+                        <div class="tr-th clearfix ">
+                            <div class="th w100 padding-left-15">基本信息</div>
+                        </div>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">公司收入总金额：<span style="line-height:50px;padding-left:5px;">{$info.income}元 　　　公司支出总金额:　　{$info.spend}元　　　剩余金额：　　{$sheng}元 </span></div>
+                        </div>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">公司名称：<span style="line-height:50px;padding-left:5px;">{$info.invite_name}</span></div>
+                        </div>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">联系人姓名：<span style="line-height:50px;padding-left:5px;">{$info.link_man}</span></div>
+                        </div>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">联系电话：<span style="line-height:50px;padding-left:5px;">{$info.link_phone}</span></div>
+                        </div>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">银行卡号：<span style="line-height:50px;padding-left:5px;">{$info.blank}</span></div>
+                        </div>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">详细地址：<span style="line-height:50px;padding-left:5px;">{$info.address}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>

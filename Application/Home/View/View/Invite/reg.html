@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>邀请注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta content="email=no" name="format-detection" />
+    <meta content="chengFeng" name="author" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="__PUBLIC__/invite/css/database.css" />
+
+    <link href="__PUBLIC__/default/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/default/bootstrap/js/bootstrap.js">
+
+    <script src="http://cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+    <script src="__PUBLIC__/default/layer/layer.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/default/global.js" type="text/javascript"></script>
+    <style type="text/css">
+        .main_ul li input{  line-height: 0.8rem;  height: 0.8rem; outline: none;margin-top:0}
+    </style>
+</head>
+<body>
+
+<!--轮播开始-->
+
+<div class="main">
+    <header class="main_header">
+        <img src="__PUBLIC__/invite/images/img.png" class="main_img"><samp>注册异城快车</samp>
+    </header>
+    <ul class="main_ul">
+        <li><img src="__PUBLIC__/invite/images/img(5).gif" class="main_ul_yi" />
+            <select id="type">
+                <option value="1">司机</option>
+                <option value="2">乘客</option>
+            </select>
+        </li>
+        <li><img src="__PUBLIC__/invite/images/img (1).gif" class="main_ul_yi" /><input type="text" id="invite_name" placeholder="请输入真实姓名 " /></li>
+        <li><img src="__PUBLIC__/invite/images/img(6).gif" class="main_ul_yi" /><input type="text" id="cart_ID" placeholder="请输入身份证号 " /></li>
+        <li><img src="__PUBLIC__/invite/images/img(7).gif" class="main_ul_yi" /><input type="text" id="mobile" placeholder="请输入手机号 " /></li>
+        <li><img src="__PUBLIC__/invite/images/img (2).gif" class="main_ul_er" /><input type="text" id="code" placeholder="请输入验证码  " /><a href="javascript:void(0)" id="getCode"  class="huoqu">获取验证码</a></li>
+        <li><img src="__PUBLIC__/invite/images/img (3).gif"  class="main_ul_san"/><input type="text" id="pwd" placeholder="请输入密码  " /></li>
+        <li><img src="__PUBLIC__/invite/images/img (2).gif" class="main_ul_er" /><input type="text" id="invite_code" value="{$invite_code}" placeholder="请输入邀请码(没有可不填)" /></li>
+    </ul>
+
+    <div class="check" style="padding-left: 0.7rem"><input type="checkbox" style="float: left; margin-top: 0.17rem; margin-right: 0.1rem"  id="xy" class="check_img"/><a href="__URL__/protocol" style="color: blue">我已阅读并同意《异城快车用户协议》</a></div>
+
+    <a href="javascript:void(0)" id="sub" class="btn btn-success btn-lg" style="  width: 80%;height: 1rem;background: #00c7e9;display: block;margin: 0 auto;text-align: center;line-height: 0.8rem; font-size: 0.35rem;color: #fff;border-radius: 0.5rem; margin-bottom: 0.5rem; margin-top: 0.5rem;">注册</a>
+</div>
+
+<input type="hidden" id="getcodeUrl" value="__URL__/getCode" />
+
+<script type="text/javascript" src="__PUBLIC__/invite/js/public.js"></script>
+</body>
+
+
+<script>
+
+    var run = true;
+
+    $(function() {
+        getCode();
+        reg();
+    })
+
+
+    // 获取手机验证码
+    function getCode() {
+        $('body').on('click', '#getCode', function() {
+
+            if(run == false) {return false;}
+
+            var _this = $(this);
+            var mobile = $('#mobile').val();
+            var type = $('#type').val();
+
+            $.ajax({
+                type:'POST',
+                url:$('#getcodeUrl').val(),
+                data:{
+                    'mobile':mobile,
+                    'type':type
+                },
+                dataType:'json',
+                beforeSend:function() {
+                    $('#type').prop('disabled', 'true');
+                    $('#mobile').prop('disabled', 'true');
+                    $('body').off('click', '#getCode');
+                },
+                success:function(obj) {
+                    if(obj.status) {
+                        if(run){
+                            var num = 60;
+                            var runs = setInterval(function(){
+                                if(num == 0){
+                                    clearInterval(runs);
+                                    $(_this).text( '获取验证码');
+                                    run = true;
+                                }else{
+                                    num--;
+                                    $(_this).text(num + 's');
+                                }
+                            },1000);
+                            $(_this).text( num + 's');
+                            run = false;
+                        }
+                    }else {
+                        layer.msg(obj.msg);
+                        $('#type').prop('disabled', '');
+                        $('#mobile').prop('disabled', '');
+                    }
+                },
+                complete:function() {
+                    getCode();
+                },
+                error:function() {
+                    layer.msg('系统繁忙');
+                }
+            });
+        });
+    }
+
+
+    // 注册
+    function reg() {
+        $('body').on('click', '#sub', function() {
+
+            var _this = $(this);
+            alert(_this);
+
+            // 验证协议是否勾选
+            if(!$("#xy").is(':checked')){
+                layer.msg('请阅读用户协议');
+                return false;
+            }
+
+
+            $.ajax({
+                type:'POST',
+                data:{
+                    'invite_name':$('invite_name').val(),
+                    'cart_ID':$('cart_ID').val(),
+                    'type':$('#type').val(),
+                    'mobile':$('#mobile').val(),
+                    'code':$('#code').val(),
+                    'pwd':$('#pwd').val(),
+                    'invite_code':$('#invite_code').val()
+                },
+                dataType:'json',
+                beforeSend:function() {
+                    $('body').off('click', '#sub');
+                    _this.text('注册中...');
+                },
+                success:function(obj) {
+
+                    layer.msg(obj.msg);
+
+                    if(obj.status){
+                        if ($('#type').val() == 2) {
+                            setTimeout(function() {
+                                window.location.href = '/Home/Invite/downLoad';
+                            }, 800)
+                        }
+                    }else {
+                        _this.text('注册');
+                        $('#type').prop('disabled', '');
+                        $('#mobile').prop('disabled', '');
+                    }
+                },
+                complete:function() {
+                    reg();
+                },
+                error:function() {
+                    layer.msg('系统繁忙');
+                }
+            });
+
+        });
+    }
+
+
+
+
+</script>
+
+</html>

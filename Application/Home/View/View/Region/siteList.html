@@ -1,0 +1,28 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="bg-gray clearfix border-bottom padding-left-15 text-black">
+                    <div class="td w100"><span class="text-white strong">站点名称</span></div>
+                </div>
+
+                <notempty name="list">
+                    <volist name="list" id="v">
+                        <div class="tr clearfix border-bottom padding-left-15 text-white">
+                            <div class="td w95" >{$v.name}</div>
+                        </div>
+                    </volist>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:18px">无记录</span></div>
+                </notempty>
+
+            </div>
+            <!--操作按钮 end -->
+        </div>
+    </div>
+    <script>
+
+    </script>
+</block>

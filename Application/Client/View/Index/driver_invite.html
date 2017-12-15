@@ -1,0 +1,116 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="search_style table-margin">
+                <div class="title_names text-blue">租赁公司推广人信息</div>
+                <form action="{:U('','','html',true)}" method='get'>
+                    <ul class="search_content clearfix">
+                        <li class='w30'>
+                            <input type="text" placeholder=" 请填写手机号码或姓名和身份证" name='keywords' value="{$keywords}" class="w100 height34 border" id="keywords">
+                        </li>
+                        <a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a>
+                        <li class=''><button class="btn_search button bg-blue" id="search"><i class="fa fa-search"></i> 搜索</button></li>
+                        <li class=''><a href="{:U()}"><button class="btn_search button bg-orange">刷新</button></a></li>
+                        <li style="color: red;font-size: 24px;margin-left: 50px;">合计：{$count}元</li>
+                    </ul>
+                </form>
+            </div>
+
+            <div class="table-margin ">
+                <notempty  name="info">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+                            <!--<th class="">编号</th>-->
+                            <th class="w10">姓名</th>
+                            <th class="w10">电话</th>
+                            <th class="w10">身份证</th>
+                            <!--<th class="w10">操作</th>-->
+                        </tr>
+
+                        <tbody id="itemContainer">
+                        <volist name="info" id="item">
+                            <tr class="list">
+                                <td>{$item.invite_name|default='-'}</td>
+                                <td>{$item.mobile}</td>
+                                <td>{$item.cart_id}</td>
+<!--                                <if condition="$item.type eq 2">
+                                    <td><a href="{:U('driver_invite',['id'=>$item['id'],'type'=>2])}">下级推荐人</a></td>
+                                    <else />
+                                    <td><a href="{:U('driver_invite',['id'=>$item['id']])}">下级推荐人</a></td>
+                                </if>-->
+                            </tr>
+                        </volist>
+
+                        </tbody>
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:28px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+            <!-- fpage -->
+            <div class="page">{$fpage}</div>
+        </div>
+    </div>
+
+    <input type="hidden" id="url" value="{$url}" />
+
+    <script>
+
+        $(function () {
+            search();
+            use();
+        })
+
+
+
+        function use() {
+            $('body').on('click', '.use', function () {
+
+                var _this = $(this);
+                var load;
+
+                $.ajax({
+                    type: 'POST',
+                    url: _this.data('url'),
+                    data: {'driver_id': _this.data('id')},
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('body').off('click', '.use');
+                        load = layer.load(2);
+                    },
+                    success: function (obj) {
+                        msg(obj.msg);
+                        if (obj.status) {
+                            redirect(window.location.href)
+                        }
+                    },
+                    complete: function () {
+                        use();
+                        layer.close(load);
+                    },
+                    error: function () {
+                        msg('系统繁忙');
+                    }
+                });
+
+            });
+        }
+
+        function search() {
+            $('body').on('click', '#search', function () {
+                var keywords = $('#keywords').val();
+
+                var url = $('#url').val();
+                url = changeURLArg(url, 'keywords', keywords);
+
+                window.location.href = url;
+            });
+        }
+
+    </script>
+
+
+</block>
+
+

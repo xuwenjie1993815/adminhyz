@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>{$Think.config.OS_NAME}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        <!--
+        body{ margin: 0;padding:0;}
+        header{ text-align: center; position: fixed;left:0;right:0;top:0;height:38.2%; overflow: hidden; background-image: url('__PUBLIC__/default/images/EL-023_02_01.png'); background-size: 100% 100%;}
+        header img{height:100%;}
+        .loginbox{width:100%;height:150px; position: fixed; top:38.2%;left:0;right:0;height:300px; overflow: hidden}
+        .sloginbox{width:300px; height: auto; margin: 0 auto;}
+        .form-text{height:36px; box-sizing: border-box; border:1px solid #dedede; float: left;width:264px;padding:0 8px; color:#666}
+        .from-group{ padding:10px 0; clear: both}
+        .from-group label.t{width:36px;height:36px; background: #ffedc3; display: block; box-sizing: border-box; border:1px solid #dedede;border-right:0; color:#17921a; text-align: center; line-height: 30px; float: left}
+        .btn-submit{color:#fff; background: #006dcc; border:1px solid #0052A3; padding:5px 10px; cursor: pointer}
+        .about{ position: fixed;left:0;right:0;bottom:0; height:140px; border-top:1px solid #dedede; background: #f8f8f8}
+        .about .content{width:1000px; height: 140px; box-sizing:  border-box; margin: 0 auto;padding:10px 0}
+        .about .content p{font-size: 14px; color:#666; line-height: 30px;padding:0;margin:0}
+        label.error{ background: #BD7A9D; color:#fff; font-size: 12px; line-height: 22px;padding:0 5px;width:100%; display: block; box-sizing: border-box}
+        .msg{ display: none; position: absolute;left:0;right:0; top:50%; margin-top: -95px; text-align: center; background: #444; z-index: 100; padding:80px 0;height:30px; color:#fff;line-height: 30px; font-size: 20px;}
+        -->
+    </style>
+</head>
+<body>
+<header>
+    <img src="__PUBLIC__/default/images/EL-023_02.png" alt=""/>
+</header>
+<div class="loginbox">
+    <div class="sloginbox">
+        <form id="loginform" method="post">
+            <div class="from-group">
+                <label class="t"><i class="fa fa-user"></i></label>
+                <input type='text' id="account" name="account" class='form-text' autocomplete="false"  placeholder="User"/>
+            </div>
+            <div class="from-group">
+                <label class="t"><i class="fa fa-unlock-alt" aria-hidden="true"></i></label>
+                <input type='password' name="password" id="password" class='form-text' autocomplete="false" placeholder="Password"/>
+            </div>
+            <div class="from-group">
+                <button type='button' id="logbtn" class="btn-submit"><i class="fa fa-unlock" aria-hidden="true"></i> 登录</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="about">
+    <div class="content">
+        <p>公司地址：重庆市北部新区金开大道106号互联网产业园3栋407室</p>
+        <p>服务热线：023-68100316</p>
+        <p>业务咨询：曹经理 18008356292</p>
+        <p>Copyright © 2010 - 2016 重庆瀚乐思信息技术有限公司 All Rights Reserved</p>
+    </div>
+</div>
+
+
+<div class="msg"></div>
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+
+    $(function(){
+        $("#loginform").validate({
+            rules: {
+                account:{
+                    required:true,
+                    minlength:5
+                },
+                password:{
+                    required:true,
+                    minlength:6
+                }
+            }
+            ,messages:{
+                account:{
+                    required:'<i class="fa fa-info-circle" aria-hidden="true"></i> 登录名必须...',
+                    minlength:'<i class="fa fa-info-circle" aria-hidden="true"></i> 登录名不少于5个字符'
+                },
+                password:{
+                    required:'<i class="fa fa-info-circle" aria-hidden="true"></i> 登录密码必须...',
+                    minlength:'<i class="fa fa-info-circle" aria-hidden="true"></i> 用户密码不少于6个字符'
+                }
+            }
+        });
+
+        $("#logbtn").click(function(){
+            if($("#loginform").valid()){
+
+                var _this = $(this);
+
+                _this.prop('disabled', 'true').text('登录中...');
+
+                var post=$("form#loginform").serializeArray();
+                $.post('{:U("","","html",true)}',post,function(res)
+                {
+                    $(".msg").text(res.msg).fadeIn(400,function(){
+                        setTimeout(function(){
+                            $('.msg').fadeOut(200)
+                        },1000)
+                    });
+
+                    if(res.status === 1){
+                        window.location.href='{:U("Index/index","","html",true)}'
+                    }else {
+                        _this.prop('disabled', '').text('登录');
+                    }
+                },'json')
+            }
+        });
+
+    })
+</script>
+</body>
+</html>

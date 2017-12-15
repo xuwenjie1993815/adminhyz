@@ -1,0 +1,162 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="search_style table-margin">
+                <div class="title_names text-blue">地区信息列表</div>
+                <ul class="search_content clearfix">
+                    <li class='w30'>
+                        <input type="text" placeholder=" 请填写地区名称" value="{$c['word']}" class="w100 height34 border" id="word">
+                    </li>
+
+                    <li class=''><button class="btn_search button bg-blue" id="search"><i class="fa fa-search"></i> 搜索</button></li>
+                    <li class=''><a href="{:U()}"><button class="btn_search button bg-orange">刷新</button></a></li>
+                </ul>
+            </div>
+
+            <div class="table-margin ">
+                <notempty  name="list">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+                            <th class="">ID</th>
+                            <th class="">名称</th>
+                            <th class="">状态</th>
+                            <th class="w15">操作</th>
+                        </tr>
+
+                        <tbody id="itemContainer">
+                        <volist name="list" id="item">
+                            <tr class="list">
+                                <td>{$item.id}</td>
+                                <td>{$item.name}</td>
+                                <eq name="item.is_use" value="1" >
+                                    <td><span class="text-green">已启用</span></td>
+                                    <else/>
+                                    <td><span class="text-red">已禁用</span></td>
+                                </eq>
+                                <td>
+                                    <a href="javascript:void(0)" data-url="__URL__/siteList/id/{$item['id']}" data-name="{$item['name']}" class="btn btn-success btn-small">站点信息</a>
+                                    | <a href="__URL__/set/id/{$item['id']}" class="btn btn-warning btn-small">添加站点</a>
+
+                                    <eq name="item.is_use" value="1" >
+                                        | <a href="javascript:void(0)" data-url="__URL__/useCity" data-id="{$item['id']}" class="btn btn-info btn-small">禁用</a>
+                                    <else/>
+                                        | <a href="javascript:void(0)" data-url="__URL__/useCity" data-id="{$item['id']}" class="btn btn-red btn-small">启用</a>
+                                    </eq>
+
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:18px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var body,_this,confirm,load;
+
+        $(function() {
+            ckLog();
+            del();
+            use();
+        })
+
+
+        // 启用
+        function use() {
+            $('body').on('click', '.use', function() {
+                _this = $(this);
+
+                $.ajax({
+                    type:'POST',
+                    url:_this.data('url'),
+                    data:{'city_id':_this.data('id')},
+                    dataType:'json',
+                    beforeSend:function() {
+                        $('body').off('click', '.del');
+                        load = layer.load(2);
+                    },
+                    success:function (obj) {
+                        if(obj.status) {
+                            if(obj.data['is_use']){
+                                _this.removeClass('text-green').addClass('text-red').text('禁用');
+                                _this.parent('td').siblings('td').eq(2).html('<span class="text-green">已启用</span>');
+                            }else {
+                                _this.removeClass('text-red').addClass('text-green').text('启用');
+                                _this.parent('td').siblings('td').eq(2).html('<span class="text-red">已禁用</span>');
+                            }
+                        }
+                    },
+                    complete:function() {
+                        del();
+                        layer.close(load);
+                    },
+                    error:function() {
+                        msg('系统繁忙');
+                    }
+                });
+
+            });
+        }
+
+
+        // 删除城市
+        function del() {
+            $('body').on('click', '.del', function() {
+                _this = $(this);
+
+                confirm = layer.confirm('确定删除该城市吗？', function(index) {
+                    if(!index) return false;
+
+                    $.ajax({
+                        type:'POST',
+                        url:_this.data('url'),
+                        data:{'city_id':_this.data('id')},
+                        dataType:'json',
+                        beforeSend:function() {
+                            $('body').off('click', '.del');
+                            load = layer.load(2);
+                        },
+                        success:function (obj) {
+                            msg(obj.msg);
+                            if(obj.status) {
+                                _this.parents('tr').remove();
+                            }
+                        },
+                        complete:function() {
+                            del();
+                            layer.close(load);
+                        },
+                        error:function() {
+                            msg('系统繁忙');
+                        }
+                    });
+                });
+
+            })
+        }
+
+        // 查看记录
+        function ckLog() {
+            $('body').on('click', '.ck', function() {
+
+                var url = $(this).data('url');
+                layer.open({
+                    type: 2,
+                    area: ['60%', '540px'],
+                    skin: 'layui-layer-rim',
+                    title: $(this).data('name'),
+                    content: [url, 'no']
+                });
+            });
+        }
+    </script>
+
+</block>
+

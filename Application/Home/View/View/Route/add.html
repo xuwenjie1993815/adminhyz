@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="container-fluid" style="padding-top:10px">
+        <form class="form-horizontal" method="post" action="{:U('','','html',true)}">
+       
+            <div class="form-group">
+                <label class="col-xs-12 control-label">出发地</label>
+                <div class="col-xs-4">
+                    <select class="form-control" name="fromcity" id="fromcity">
+                        <option value="0">选择城市</option>
+                        <volist name="citylist" id="cl">
+                            <option   value="{$cl.id}">{$cl.name}</option>
+                        </volist>
+                    </select>
+                </div>
+                <div class="col-xs-6">
+                    <select class="form-control" name="fromstation" id="fromstation">
+                        <option value="0">选择站点</option>
+                    </select>
+                  </div>
+            </div>
+           <div class="form-group">
+                <label class="col-xs-12 control-label">目的地</label>
+                <div class="col-xs-4">
+                    <select class="form-control" name="tocity" id="tocity">
+                        <option value="0">选择城市</option>
+                        <volist name="citylist" id="cl">
+                            <option   value="{$cl.id}">{$cl.name}</option>
+                        </volist>
+                    </select>
+                </div>
+                <div class="col-xs-6">
+                    <select class="form-control" name="tostation" id="tostation">
+                        <option value="0">选择站点</option>
+                    </select>
+                  </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 control-label">运费</label>
+                <div class="col-xs-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" required="required" onkeyup="value=value.replace(/[^\d.]/g,'')" name="money" value="" aria-describedby="basic-addon2">
+                        <span class="input-group-addon" id="basic-addon2">元</span>
+                    </div>
+                  </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 control-label">状态</label>
+                <div class="col-xs-6">
+                    <label class="radio-inline">
+                        <input type="radio" name="state" value="1" checked="checked"> 启用
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="state" value="0" > 禁用
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">确认保存</button>
+              </div>
+            </div>
+        </form>
+   
+        
+        <script src="//cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                
+            
+                
+                $("form").submit(function(){
+                    var data=$(this).serializeArray();
+                    var submit=true;
+                    var tip={
+                        fromcity:'请设置出发地城市',
+                        fromstation:'请设置出发地站点',
+                        tocity:'请设置目的地城市',
+                        tostation:'请设置目的地站点',
+                        money:'运费必须且大于0'
+                    },fromstation=0,tostation=0;
+                    
+                    $.each(data,function(i,v){
+                        switch(v.name){
+                            case "fromcity":
+                            case "fromstation":
+                            case 'tocity':
+                            case 'tostation':
+                                var val=parseInt(v.value);
+                                if(v.name === 'fromstation') {fromstation=val;}
+                                if(v.name === 'tostation') {tostation=val;}
+                                if(val === 0){
+                                    alert(tip[v.name]);
+                                    submit=false;
+                                    return false;
+                                }
+                                break;
+                            case "money":
+                                var val=parseFloat(v.value);
+                                if(val<=0){
+                                    submit=false;
+                                    alert(tip[v.name]);
+                                }
+                                break;
+                        }
+                    })
+                    if(submit && fromstation === tostation){
+                        submit=false;
+                        alert('出发站不能和目的站相同')
+                    }
+                    
+                    if(submit){
+                        $.post("{:U('add','','html',true)}",data,function(res){
+                            alert(res.msg)
+                            if(res.state===1){
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭   
+                            }
+                        },'json')
+                    }
+                    
+                    return false;
+                })
+                
+                $("#fromcity,#tocity").change(function(){
+                    var dom=$(this).attr('id');
+                    var station= (dom === 'fromcity' ? 'fromstation' : 'tostation');
+                    var fromcity=parseInt($(this).val());
+                    if(fromcity === 0){
+                        $("#"+station).html('<option value="0">选择站点</option>');
+                    }else{
+                        $.ajax({
+                            url:'{:U("getSite","","html",true)}',
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                id:fromcity
+                            },
+                            success: function (res) {
+                                var html='<option value="0">选择站点</option>';
+                                if(res.length > 0){
+                                    $.each(res,function(i,v){
+                                        html+='<option value="'+v.id+'">'+v.name+'</option>';
+                                    })
+                                }
+                                $("select#"+station).html(html)
+                            }
+                        })
+                    }
+                })
+            })
+        </script>
+    </body>
+</html>

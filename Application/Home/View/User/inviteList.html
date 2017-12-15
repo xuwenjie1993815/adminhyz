@@ -1,0 +1,43 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+
+            <div class="manage-head">
+                <h6 class="padding-left manage-head-con">二级邀请人信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+            </div>
+
+            
+            
+            <notempty name='driver_two'>
+                <div class="offcial-table input-table table-margin clearfix ">
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">邀请人信息(司机)</div>
+                    </div>
+                    <volist name='driver_two' id='der'>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">邀请人：{$der.invite_name}</div>
+                            <div class="td w33">联系电话：{$der.mobile}</div>
+                        </div>
+                    </volist>
+                </div>
+            </notempty>
+            <notempty name='user_two'>
+                <div class="offcial-table input-table table-margin clearfix ">
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">邀请人信息(乘客)</div>
+                    </div>
+                    <volist name='user_two' id='use'>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">邀请人：{$use.invite_name}</div>
+                            <div class="td w33">联系电话：{$use.mobile}</div>
+                        </div>
+                    </volist>
+                </div>
+            </notempty>
+
+        </div>
+    </div>
+
+</block>

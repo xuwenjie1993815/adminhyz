@@ -1,0 +1,101 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+
+            <div class="manage-head">
+                <a class="button fr margin-right-75" style='margin-top: 5px;' onClick="javascript:resetcode('{$info.id}')">重置二维码</a>
+                <h6 class="padding-left manage-head-con">乘客详细信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+            </div>
+
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">基本信息(带<font color="#FF0000">*</font>的栏目，可双击进行修改)</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">手机号码：<span class="text-blue">{$info.mobile}</span></div>
+                    <!--<a href="#" onClick="javascript:return resetpwd()" data-id="{$info.id}">重置密码</a>-->
+                    <div class="td w33">乘客昵称：{$info.nick_name|default='-'}</div>
+                    <div class="td w33">真实姓名：<span ondblclick="ShowElement(this,'invite_name')">{$info.invite_name|default='---'}</span></div>
+                    <div class="td w33">启用状态：{$info.status|getUseTxt}</div>
+                    <div class="td w33">身份证号码<font color="#FF0000">*</font>：<span class="text-blue" ondblclick="ShowElement(this,'cart_id')">{$info.cart_id}</span></div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">收入总额：{$info.income} 元</div>
+                    <div class="td w33">提现总额：{$info.spend} 元</div>
+                    <div class="td w33">剩余金额：{$info['income'] - $info.spend} 元</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">乘客等级：<span>{$info.level|userLevel}</span></div>
+                    <div class="td w33">创建时间：<span>{$info.create_time|date='Y-m-d H:i:s', ###}</span></div>
+                    <div class="td w33">登录时间：<span>{$info.login_time|date='Y-m-d H:i:s', ###}</span></div>
+                </div>
+            </div>
+            
+            
+            <notempty name='driver'>
+                <div class="offcial-table input-table table-margin clearfix ">
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">邀请人信息</div>
+                    </div>
+                    <volist name='driver' id='der'>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <!--<a href="{:U('inviteList',['id'=>$der['id'],'invite_code'=>$der['invite_code']])}">-->
+                            <div class="td w33">邀请人：{$der.invite_name}</div>
+                            <!--<div class="td w33">邀请人类型：{$der.invite_type}</div>-->
+                            <div class="td w33">联系电话：{$der.mobile}</div>
+                        </div>
+                        <notempty name="der.list">
+                            <volist name="der.list" id="li">
+                                <div class="tr clearfix border-bottom padding-left-15">
+                                    <div class="td w33">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邀请人：{$li.invite_name}</div>
+                                    <!--<div class="td w33">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邀请人类型：{$li.invite_type}</div>-->
+                                    <div class="td w33">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话：{$li.mobile}</div>
+                                </div>
+                            </volist>
+                        </notempty>
+                    </volist>
+                </div>
+            </notempty>
+
+        </div>
+    </div>
+    <script>
+    /*更新字段值*/
+        function updateData($field,$value){
+            $.ajax({
+                type:'POST',
+                url:"{:U('updateValue')}",
+                data:{
+                    'id':"{$info.id}",
+                    'field':$field,
+                    'values':$value
+                },
+                success:function(obj) {
+                    msg(obj.msg);
+                    return false;
+                }
+            });
+            return false;
+        }
+        //重置二维码
+        function resetcode($id){
+			layer.confirm('确定重置二维码吗？',function(index){
+					if(index){
+						$.ajax({
+							type:'POST',
+							url:"{:U('resetcode','','html',true)}",
+							data:{
+								'id':$id
+							},
+							success:function(obj) {
+								msg(obj.msg);
+							}
+						});
+					}
+				})
+            
+        }
+    </script>
+</block>

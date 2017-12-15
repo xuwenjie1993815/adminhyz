@@ -1,0 +1,153 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="manage-head">
+                <h6 class="padding-left manage-head-con">司机详细信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+            </div>
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">基本信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">手机号码：<span class="text-blue">{$info.mobile}</span></div>
+                    <div class="td w33">注册状态：{$info.is_audit|getAuditTxt}</div>
+                    <div class="td w33">启用状态：{$info.status|getUseTxt}</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <eq name="info.is_audit" value="0">
+                        <div class="td w33">司机姓名：<input type="text" name="driver_name" class="input w20" value="{$info.driver_name}" /> </div>
+                        <else/>
+                        <div class="td w33">司机姓名：<span>{$info.true_name|default='-'}</span></div>
+                    </eq>
+                    
+                    <div class="td w33">司机类型：<span>{$info.type|getDriverType}</span></div>
+                    <div class="td w33">创建时间：<span>{$info.create_time|date='Y-m-d H:i', ###}</span></div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <eq name="info.is_audit" value="0">
+                        <div class="td w33">驾驶年龄：<input type="number" name="driver_age" class="input w20" value="{$info.driver_age}" /> 年</div>
+                        <else/>
+                        <div class="td w33">驾驶年龄：<span>{$info.driver_age|default='-'} 年</span></div>
+                    </eq>
+
+                    <div class="td w33">所属公司：<span>{$info.company_name}</span></div>
+                    <notempty name="info.login_time">
+                        <div class="td w33">登录时间：<span>{$info.login_time|date='Y-m-d H:i', ###}</span></div>
+                        <else/>
+                        <div class="td w33">登录时间：<span>--</span></div>
+                    </notempty>
+                </div>
+            </div>
+
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">车辆信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">车牌号码：<span class="text-blue">{$info.license_sn}</span></div>
+                    <div class="td w33">车架号码：<span>{$info.carframe_sn}</span></div>
+                    <div class="td w33">驾照号码：<span class="text-blue">{$info.driver_sn}</span></div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">可载人数：<span>{$info.car_load_num}</span>人</div>
+                    <div class="td w33">汽车排量：<span>{$info.car_engine}</span></div>
+                    <div class="td w33">注册时间：<span>{$info.car_reg_time|date='Y-m-d H:i', ###}</span></div>
+                </div>
+            </div>
+
+            <!--订单信息-->
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">相关图片</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w50">司机的图片：<a href="{$info.head_pic}" ><img src="{$info.head_pic}" width="160" class="padding-top" /></a></div>
+                    <div class="td w50">车辆的图片：<a href="{$info.car_pic}" ><img src="{$info.car_pic}" width="160" class="padding-top" /></a></div>
+                </div>
+
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w50">身份证正面：<a href="{$info.idcard_pic_zm}" ><img src="{$info.idcard_pic_zm}" width="160" class="padding-top" /></a></div>
+                    <div class="td w50">身份证反面：<a href="{$info.idcard_pic_fm}" ><img src="{$info.idcard_pic_fm}" width="160" class="padding-top" /></a></div>
+                </div>
+
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w50">驾驶证正面：<a href="{$info.license_pic_zm}" ><img src="{$info.license_pic_zm}" width="160" class="padding-top" /></a></div>
+                    <div class="td w50">驾驶证反面：<a href="{$info.license_pic_fm}" ><img src="{$info.license_pic_fm}" width="160" class="padding-top" /></a></div>
+                </div>
+            </div>
+
+            <eq name="info.is_audit" value="0" >
+                <div class="tr clearfix padding-top" style="text-align:center">
+                    <button type="button" class="button bg-green inlib-product audit" data-id="{$info.id}" data-type="1" >审核通过</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="button bg-red inlib-product audit" data-id="{$info.id}" data-type="2" >审核失败</button>
+                </div>
+            </eq>
+        </div>
+    </div>
+
+    <input type="hidden" id="audit_url" value="__URL__/audit">
+
+    <script>
+        var _this,data,confirm,load;
+
+        $(function() {
+            audit();
+        });
+
+
+        // 审核
+        function audit() {
+            $('body').on('click', '.audit', function() {
+                _this = $(this);
+                var driver_age = '',driver_name='';;
+
+                if(_this.data('type') == 1) {
+                    driver_age = $(":input[name='driver_age']").val();
+                    driver_name=$(":input[name='driver_name']").val();
+                    if(driver_age == '') {
+                        msg('请填写驾驶年龄');
+                        return false;
+                    }else if(driver_name == ''){
+                        msg('请填写驾驶员姓名');
+                        return false;
+                    }
+                }
+
+                confirm = layer.confirm('确定操作吗？', function(index) {
+                    if(!index) return false;
+
+                    $.ajax({
+                        type:'POST',
+                        url:$('#audit_url').val(),
+                        data:{
+                            'id':_this.data('id'),
+                            'type':_this.data('type'),
+                            'driver_age':driver_age,
+                            'driver_name':driver_name
+                        },
+                        beforeSend:function() {
+                            _this.prop('disbaled', 'true');
+                            load = layer.load(2);
+                        },
+                        success:function(obj) {
+                            msg(obj.msg);
+                            redirect(window.location.href);
+                        },
+                        complete:function() {
+                            _this.prop('disabled', '');
+                            layer.close(load);
+                        },
+                        error:function() {
+                            msg('系统繁忙');
+                        }
+                    });
+                });
+            });
+        }
+
+    </script>
+
+</block>

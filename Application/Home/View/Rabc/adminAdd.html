@@ -1,0 +1,64 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <form id="post_form">
+        <div class="offcial-table input-table table-margin clearfix ">
+            <div class="tr-th clearfix ">
+                <div class="td w15 padding-left-15 strong text-right">账号：</div>
+                <div class="td w80 padding-left-15 strong"><input type='text' class='w75 input remark' name='account' id='nick_name' value="{$info.account}" /></div>
+            </div>
+            <div class="tr-th clearfix ">
+                <div class="td w15 padding-left-15 strong text-right">昵称：</div>
+                <div class="td w80 padding-left-15 strong"><input type='text' class='w75 input remark' name='nick_name' id='nick_name' value="{$info.nick_name}" /></div>
+            </div>
+            <div class="tr-th clearfix ">
+                <div class="td w15 padding-left-15 strong text-right">密码：</div>
+                <div class="td w80 padding-left-15 strong"><input type='text' class='w75 input remark' name='pwd' id='nick_name' value="" /></div>
+            </div>
+        </div>
+
+        <input type="hidden" name="id" value="{$id}">
+        <div class="tr-th clearfix padding-top text-center">
+            <div class="td padding-left-15 strong">
+                <input type='button' value='提交' class='button submit-order bg-mix padding-top-10'/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type='button' value='取消' onclick="javascript:window.parent.close_layer();" class='button bg-grey'/>
+            </div>
+        </div>
+    </form>
+
+
+
+    <script>
+        var body = $('body');
+        var _this,data,load,confirm;
+
+        $(".submit-order").click(function () {
+
+            _this = $(this);
+            
+            var id = $(":input[name='id']").val();
+            var pwd = $(":input[name='pwd']").val();
+            var account = $(":input[name='account']").val();
+            var nick_name = $(":input[name='nick_name']").val();
+            
+            if(nick_name == '' || account == '' || pwd == '') {
+                layer.msg('请完善信息');
+                return false;
+            }
+            $.ajax({
+                data: {'nick_name':nick_name,'role_id':id,'pwd':pwd,'account':account},
+                type: 'post',
+                url:"{:U('adminAdd')}",
+                dataType: 'json',
+                success: function (data) {
+                    layer.msg(data.msg);
+
+                    if(data.status)
+                    {
+                        setTimeout(function() {window.parent.close_layer(data.msg);}, 700)
+                    }
+                },
+            });
+        });
+    </script>
+</block>

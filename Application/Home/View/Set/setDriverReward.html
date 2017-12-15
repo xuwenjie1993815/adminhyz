@@ -1,0 +1,80 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <form id="ff">
+            <div class="info-center">
+
+                <div class="manage-head">
+                    <h6 class="padding-left manage-head-con">设置司机奖励</h6>
+                </div>
+
+                <div class="offcial-table input-table table-margin clearfix ">
+
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">司机奖励配置（一周）</div>
+                    </div>
+
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w20">订单金额：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.db_money}" style="width:100px;" class="input" name="db_money"/></span> 元</div>
+                        <div class="td w20">推荐人数：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.db_person}" style="width:100px;" class="input" name="db_person"/></span></div>
+                        <div class="td w20">获奖人数：&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.bonud_person}" style="width:100px;" class="input" name="bonud_person"/></span> </div>
+                        <div class="td w20">奖励金额：<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.bonud_money}" style="width:100px;" class="input" name="bonud_money"/></span> 元</div>
+                    </div>
+
+                </div>
+
+                <!--操作按钮 start-->
+                <div class="text-center padding-top">
+                    <div class="td w80">
+                        <button type="button" class="button bg-blue inlib-product" id="sub">提交</button>
+                        <a class="button bg-blue inlib-product" href="{:U('Api/Scheduled/driverReward')}">选择中奖司机</a>
+                    </div>
+                </div>
+                <!--操作按钮 end -->
+
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var data, confirm, load, _this;
+
+        $(function () {
+            sub();
+        })
+
+        function sub() {
+            $('body').on('click', '#sub', function () {
+                _this = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    data: $('#ff').serialize(),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        _this.prop('disabled', 'true');
+                        load = layer.load(2);
+                    },
+                    success: function (obj) {
+                        msg(obj.msg);
+                        if (obj.status) {
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 800);
+                        }
+                    },
+                    complete: function () {
+                        _this.prop('disabled', '');
+                        layer.close(load);
+                    },
+                    error: function () {
+                        msg('系统繁忙');
+                    }
+                });
+            });
+        }
+
+    </script>
+
+</block>

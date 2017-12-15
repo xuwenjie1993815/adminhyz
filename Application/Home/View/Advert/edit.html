@@ -1,0 +1,78 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <form id="ff">
+            <input type="hidden" name="id" value="{$info.id}" />
+            <div class="info-center">
+                <div class="manage-head">
+                    <h6 class="padding-left manage-head-con">修改广告位</h6>
+                </div>
+
+                <div class="offcial-table input-table table-margin clearfix ">
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">广告位信息</div>
+                    </div>
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w33">广告位名称：<span style="line-height:30px;">
+                        <input type="text" style="width:320px;" class="input" name="title" value="{$info.title}"/>
+                        </span></div>
+                    </div>
+
+                </div>
+
+                <!--操作按钮 start-->
+                <div class="text-center padding-top">
+                    <div class="td w80">
+                        <button type="button" class="button bg-blue inlib-product" id="sub">提交</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:history.go(-1)"><button type="button" class="button bg-gray inlib-product">返回</button></a>
+                    </div>
+                </div>
+                <!--操作按钮 end -->
+
+            </div>
+        </form>
+    </div>
+
+    <input type="hidden" id="ref_url" value="{$ref_url}" />
+
+    <script>
+        var data,confirm,load,_this;
+
+        $(function() {
+            sub();
+        })
+
+        function sub() {
+            $('body').on('click', '#sub', function() {
+                _this = $(this);
+
+                $.ajax({
+                    type:'POST',
+                    data:$('#ff').serialize(),
+                    dataType:'json',
+                    beforeSend:function() {
+                        _this.prop('disabled', 'true');
+                        load = layer.load(2);
+                    },
+                    success:function(obj) {
+                        msg(obj.msg);
+                        if(obj.status) { redirect($('#ref_url').val());}
+                    },
+                    complete:function() {
+                        _this.prop('disabled', '');
+                        layer.close(load);
+                    },
+                    error:function() {
+                        msg('系统繁忙');
+                    }
+                });
+            });
+        }
+
+
+
+    </script>
+
+</block>

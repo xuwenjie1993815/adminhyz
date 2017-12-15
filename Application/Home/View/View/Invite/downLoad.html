@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>客户端下载</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta content="email=no" name="format-detection" />
+    <meta content="chengFeng" name="author" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="__PUBLIC__/invite/css/database.css" />
+    <script type="text/javascript" src="__PUBLIC__/invite/js/jquery-1.9.0.min.js"></script>
+    <style type="text/css">
+        *{margin:0; padding:0;}
+        a{text-decoration: none;}
+        img{max-width: 100%; height: auto;}
+        .weixin-tip{display: none; position: fixed; left:0; top:0; bottom:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80);  height: 100%; width: 100%; z-index: 100;}
+        .weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}
+    </style>
+</head>
+<body>
+<div class="weixin-tip">
+    <p>
+        <img src="__PUBLIC__/invite/images/share.png" alt="微信打开"/>
+    </p>
+</div>
+
+<script type="text/javascript">
+    $(window).on("load",function(){
+        var winHeight = $(window).height();
+        function is_weixin() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        var isWeixin = is_weixin();
+        if(isWeixin){
+            $(".weixin-tip").css("height",winHeight);
+            $(".weixin-tip").show();
+        }
+    })
+</script>
+<!--轮播开始-->
+<div class="main">
+
+    <div class="main_bj">
+        <div class="link">
+        </div>
+        <!--<a href="#" class="ios">ios下载 </a>-->
+        <a href="__URL__/doDownload" class="android">Android下载</a>
+    </div>
+    <div class="cover"></div>
+</div>
+<script type="text/javascript" src="__PUBLIC__/invite/js/public.js"></script>
+<script type="text/javascript">
+
+</script>
+
+</body>
+</html>

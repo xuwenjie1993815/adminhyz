@@ -1,0 +1,54 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <form id="post_form">
+        <div class="offcial-table input-table table-margin clearfix ">
+            <div class="tr-th clearfix ">
+                <div class="td w15 padding-left-15 strong text-right">角色名称：</div>
+                <div class="td w80 padding-left-15 strong"><input type='text' class='w75 input remark' name='nick_name' id='nick_name' value="{$info.nick_name}" /></div>
+            </div>
+        </div>
+        
+        <input type='hidden' class='w75 input remark' name='id' id='nick_name' value="{$id}" />
+        <div class="tr-th clearfix padding-top text-center">
+            <div class="td padding-left-15 strong">
+                <input type='button' value='提交' class='button submit-order bg-mix padding-top-10'/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type='button' value='取消' onclick="javascript:window.parent.close_layer();" class='button bg-grey'/>
+            </div>
+        </div>
+    </form>
+
+
+
+    <script>
+        var body = $('body');
+        var _this,data,load,confirm;
+
+        $(".submit-order").click(function () {
+
+            _this = $(this);
+            
+            var nick_name = $(":input[name='nick_name']").val();
+            var id = $(":input[name='id']").val();
+            
+            if(nick_name == '') {
+                layer.msg('请填写角色名称');
+                return false;
+            }
+            $.ajax({
+                data: {'nick_name':nick_name,'id':id},
+                type: 'post',
+                url:"{:U('roleEditInfo')}",
+                dataType: 'json',
+                success: function (data) {
+                    layer.msg(data.msg);
+
+                    if(data.status)
+                    {
+                        setTimeout(function() {window.parent.close_layer(data.msg);}, 700)
+                    }
+                },
+            });
+        });
+    </script>
+</block>

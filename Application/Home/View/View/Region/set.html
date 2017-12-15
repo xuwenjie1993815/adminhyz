@@ -1,0 +1,184 @@
+<extend name="../../Home/View/Public/base" />
+
+<link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="manage-head">
+                <h6 class="padding-left manage-head-con">设置站点信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+            </div>
+
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">地区信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">
+                        <label style="float:left">地区名称：<span class="text-blue"><?=$info['name']?></span></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">站点信息</div>
+                </div>
+
+                <div class="tr clearfix border-bottom padding-left-15 color_list">
+                    <div>
+                        <input class="input w70" type="text" placeholder=" 请填写站点名称" />
+                        <button class="btn_search button bg-green padding-top add" data-pid="{$info.id}" style="float: right" >添加</button>
+                    </div>
+                </div>
+
+                <volist name="zhandian" id="v">
+                    <div class="tr clearfix border-bottom padding-left-15 color_list">
+                        <div>
+                            <span class="text-blue">{$v.name}</span>
+                            <button class="btn_search button bg-red padding-top del" data-id="{$v.id}" style="float: right" >删除</button>
+                        </div>
+                    </div>
+                </volist>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="city" value="{$info.name}" />
+
+    <input type="hidden" id="cityCode" value="">
+
+
+    <script>
+
+        var _this,load;
+
+        $(function() {
+            add();
+            del();
+            mapInit();
+        })
+
+
+        function mapInit() {
+            $.ajax({
+                type:'GET',
+                url:'http://restapi.amap.com/v3/geocode/geo',
+                data:{
+                    'key':'389880a06e3f893ea46036f030c94700',
+                    's':'rsv',
+                    'address':$('#city').val()
+                },
+                dataType:'json',
+                success:function(obj) {
+                    if(obj.status == 1) {
+                        var geoCodes = obj.geocodes;
+                        var cityCode = geoCodes[0]['citycode'];
+                        $('#cityCode').val(cityCode);
+                    }else {
+                        msg(obj.info);
+                    }
+                },
+            });
+        }
+
+        function add() {
+            $('body').on('click', '.add', function() {
+                _this = $(this);
+                var pid = _this.data('pid');
+                var name = _this.prev('input').val();
+
+                if(name == '') {msg('请填写站定名称'); return false;}
+
+                $.ajax({
+                    type:'GET',
+                    url:'http://restapi.amap.com/v3/geocode/geo',
+                    data:{
+                        'key':'389880a06e3f893ea46036f030c94700',
+                        's':'rsv',
+                        'city':$('#cityCode').val(),
+                        'address':name
+                    },
+                    dataType:'json',
+                    beforeSend:function() {
+                        _this.prop('disabled', 'true');
+                        load = layer.load(2);
+                    },
+                    success:function(obj) {
+                        if(obj.status == 1) {
+                            var geoCodes = obj.geocodes;
+                            if(geoCodes.length === 0){
+                                msg('站点坐标信息异常');
+                                return false;
+                            }
+                            var location = geoCodes[0]['location'];
+                            addAction(pid, name, location);
+                        }else {
+                            msg(obj.info);
+                        }
+                    },
+                    complete:function() {
+                        _this.prop('disabled', '');
+                        layer.close(load);
+                    },
+                    error:function() {
+                        msg('系统繁忙');
+                    }
+                });
+            });
+        }
+
+        function addAction(pid, name, location) {
+            $.ajax({
+                 type:'POST',
+                 data:{
+                     'flag':'add',
+                     'pid':pid,
+                     'name':name,
+                     'location':location
+                 },
+                 dataType:'json',
+                 success:function(obj) {
+                     msg(obj.msg);
+                     if(obj.status) { redirect(window.location.href); }
+                 },
+                 error:function() {
+                    msg('系统繁忙');
+                 }
+             });
+        }
+
+        function del() {
+            $('body').on('click', '.del', function() {
+                _this = $(this);
+                var id = _this.data('id');
+
+                $.ajax({
+                    type:'POST',
+                    data:{
+                        'flag':'del',
+                        'id':id,
+                    },
+                    dataType:'json',
+                    beforeSend:function() {
+                        _this.prop('disabled', 'true');
+                        load = layer.load(2);
+                    },
+                    success:function(obj) {
+                        msg(obj.msg);
+                        _this.parent('div').remove();
+                    },
+                    complete:function() {
+                        _this.prop('disabled', '');
+                        layer.close(load);
+                    },
+                    error:function() {
+                        msg('系统繁忙');
+                    }
+                });
+            });
+        }
+
+    </script>
+
+</block>

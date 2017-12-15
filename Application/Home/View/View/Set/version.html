@@ -1,0 +1,51 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <form id="ff" action="{:U('','','html',true)}" method='post' enctype='multipart/form-data'>
+            <div class="info-center">
+                <div class="manage-head">
+                    <h6 class="padding-left manage-head-con">版本更新</h6>
+                </div>
+
+                <div class="offcial-table input-table table-margin clearfix ">
+
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w33">版本号：<span style="line-height:30px;">
+                        <input type="text" style="width:320px" class="input" placeholder=" 版本号" required="required" name="version"/>
+                        </span></div>
+                    </div>
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w33">APK文件：<span style="line-height:30px;">
+                            <input type="file" required="required" name="file"/></span></div>
+                    </div>
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w33">版本描述：
+                            <span style="line-height:30px;padding-left:5px;">
+                                <textarea class="input" style="width:640px;height:100px;" required="required" name="remark"></textarea>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!--操作按钮 start-->
+                <div class="text-center padding-top">
+                    <div class="td w80">
+                        <button type="submit" class="button bg-blue inlib-product" id="sub">提交</button>
+                    </div>
+                </div>
+                <!--操作按钮 end -->
+
+        </div>
+        </form>
+    </div>
+
+
+    <script>
+      
+
+
+
+    </script>
+
+</block>

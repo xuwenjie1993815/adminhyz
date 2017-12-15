@@ -1,0 +1,43 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+
+            <div class="table-margin ">
+                <notempty  name="list">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+                            <th class="w15">广告位名称</th>
+                            <th class="w10">操作</th>
+                        </tr>
+
+                        <tbody id="itemContainer">
+                        <volist name="list" id="item">
+                            <tr class="list">
+                                <td>{$item.title}</td>
+                                <td>
+                                    <a href="{:U('Picture/add','id='.$item['id'])}" class="btn btn-warning btn-small">添加图片</a>
+                                    | <a href="{:U('Picture/index','id='.$item['id'])}" class="btn btn-success btn-small">修改信息</a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:18px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+            <!-- fpage -->
+            <div class="page">{$fpage}</div>
+        </div>
+    </div>
+
+    <script src="//cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+    </script>>
+
+</block>
+

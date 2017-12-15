@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="renderer" content="webkit">
+        <title>登录</title>  
+        <link rel="stylesheet" href="__PUBLIC__/client/css/pintuer.css">
+        <link rel="stylesheet" href="__PUBLIC__/client/css/admin.css">
+        <link rel="stylesheet" href="__PUBLIC__/client/css/style.css">
+        <script src="__PUBLIC__/client/js/jquery.js"></script>
+        <script src="__PUBLIC__/client/js/pintuer.js"></script>  
+        <link rel="stylesheet" href="__PUBLIC__/client/css/my.css"/>
+    </head>
+    <body>
+        <div class="bg"></div>
+        <div class="container">
+            <div class="line bouncein">
+                <div class="xs6 xm4 xs3-move xm4-move">
+                    <div style="height:150px;"></div>
+                    <div class="media media-y margin-big-bottom">           
+                    </div>         
+                    <form  id="login" method="post">
+                        <div class="panel loginbox">
+                            <div class="text-center margin-big padding-big-top"><h1>异城快车租车公司后台管理中心</h1></div>
+                            <div class="panel-body" style="padding:30px; padding-bottom:10px; padding-top:10px;">
+                                <div class="form-group">
+                                    <div class="field field-icon-right">
+                                        <input type="text" class="input input-big" name="link_phone" placeholder="请输入用户名" id="link_phone"  data-validate="required:请填写账号" />
+                                        <span class="icon icon-user margin-small"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="field field-icon-right">
+                                        <input type="password" class="input input-big" name="password" placeholder="请输入密码" id="password" data-validate="required:请填写密码" />
+                                        <span class="icon icon-key margin-small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--                            <div style="padding:30px;">
+                                                            <input type="submit" class="button button-block bg-main text-big input-big" value="登录">
+                                                        </div>-->
+                            <div style="padding:30px;">
+                                <button type='button' class="button button-block bg-main text-big input-big submit">登录</button>
+                            </div>
+                        </div>
+                    </form>          
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="__PUBLIC__/client/js/msgbox.js"></script>
+        <script>
+            $(function () {
+                // 登录
+                $('.submit').click(function () {
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: "{:U('Client/Login/login')}",
+                        data: $('#login').serialize(),
+                        async: true,
+                        success: function (data) {
+                            if (data.status) {
+                                msgload("登录中…");
+                                setTimeout(function () {
+                                    msgok("登录成功,正在跳转中..");
+                                    location.href = "{:U('Client/Index/index')}";
+                                }, 3000);
+                            } else {
+                                msginfo(data.info);
+//                                $('#captcha').click();
+                            }
+                        },
+                        error: function (request) {
+                            msgerr("页面错误");
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,18 @@
+array (
+  'usertypes' => 3,
+  'userid' => 19,
+  'tradetypes' => '现金提现',
+  'money' => -1200,
+  'order_sn' => NULL,
+  'invite_code' => NULL,
+)--流水信息-
+1111--流水信息000-
+array (
+  'usertypes' => 3,
+  'userid' => 19,
+  'tradetypes' => '现金提现',
+  'money' => -1200,
+  'order_sn' => NULL,
+  'invite_code' => NULL,
+)--流水信息-
+1111--流水信息000-

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <p></p>
+            <div class="row">
+            <div class="col-md-12">
+                <a href="{:U('version','','html',true)}" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增版本信息</a>
+            </div>
+        </div>
+            <p></p>
+       <volist name ="data" id="dt">
+       <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-6">版本号：Version {$dt.version}</div>
+                    <div class="col-md-6 text-right">{$dt.updatetime}</div>
+                </div>
+                
+         
+            </div>
+            <div class="panel-body">
+                <h5>更新内容：</h5>
+                <p>{$dt.remark}</p>
+            </div>
+
+            <!-- List group -->
+            <ul class="list-group">
+              <li class="list-group-item">下载地址：http://{$Think.server.HTTP_HOST}{:substr($dt['downloadlink'],1)}</li>
+            </ul>
+        </div>
+       </volist>
+        </div>
+        
+    </body>
+</html>

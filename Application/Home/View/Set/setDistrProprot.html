@@ -1,0 +1,87 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <form id="ff">
+            <div class="info-center">
+
+                <div class="manage-head">
+                    <h6 class="padding-left manage-head-con">设置三级分销抽成比例</h6>
+                </div>
+
+                <div class="offcial-table input-table table-margin clearfix ">
+
+
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">三级分销抽成比例（基于司机抽成后的订单金额）</div>
+                    </div>
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w20">一级推荐人：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.one_rate}" style="width:100px;" class="input" name="one_rate"/></span> %</div>
+                        <div class="td w20">二级推荐人：<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.two_rate}" style="width:100px;" class="input" name="two_rate"/></span> %</div>
+                        <div class="td w20">租赁公司提成：<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.three_rate}" style="width:100px;" class="input" name="three_rate"/></span> %</div>
+                        <div class="td w20">公司分成：<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.company_rate}" style="width:100px;" class="input" name="company_rate"/></span> %</div>
+                        <!--<div class="td w20">平台：<span style="line-height:30px;padding-left:5px;"><input type="number" disabled value="{$info.terrace_rate}" style="width:100px;" class="input" name="terrace_rate"/></span> %</div>-->
+                    </div>
+                </div>
+
+                <!--操作按钮 start-->
+                <div class="text-center padding-top">
+                    <div class="td w80">
+                        <button type="button" class="button bg-blue inlib-product" id="sub">提交</button>
+                    </div>
+                </div>
+                <!--操作按钮 end -->
+
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var data, confirm, load, _this;
+
+        $(function () {
+            sub();
+        })
+
+        function sub() {
+            $('body').on('click', '#sub', function () {
+                _this = $(this);
+				
+                var one_rate = $("input[name=one_rate]").val();
+                var two_rate = $("input[name=two_rate]").val();
+                var three_rate = $("input[name=three_rate]").val();
+                var company_rate = $("input[name=company_rate]").val();
+                if(one_rate<0 || two_rate<0 || three_rate<0 || company_rate<0){
+                    msg('分销比例不能小于0');;return false;
+                }
+				
+                $.ajax({
+                    type: 'POST',
+                    data: $('#ff').serialize(),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        _this.prop('disabled', 'true');
+                        load = layer.load(2);
+                    },
+                    success: function (obj) {
+                        msg(obj.msg);
+                        if (obj.status) {
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 800);
+                        }
+                    },
+                    complete: function () {
+                        _this.prop('disabled', '');
+                        layer.close(load);
+                    },
+                    error: function () {
+                        msg('系统繁忙');
+                    }
+                });
+            });
+        }
+
+    </script>
+
+</block>

@@ -1,0 +1,212 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="manage-head">
+			<a class="button fr" style="margin-left:10px" onClick="javascript:unAduit('{$info.is_audit}')">弃审</a>
+                <if condition="$info.is_audit eq 0">
+                    <a class="button fr" style="margin-left:10px" onClick="javascript:Aduit('{$info.id}', 1)">审核通过</a>
+                    <a class="button fr" style="margin-left:10px" onClick="javascript:Aduiterror('{$info.id}', -1)">审核失败</a>
+                    <elseif condition="$info.is_audit eq 1" />
+                    <else />
+                    <a class="button fr" style="margin-left:10px" onClick="javascript:Aduit('{$info.id}', 1)">审核通过</a>
+                </if>
+                <a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a>
+                <h6 class="padding-left manage-head-con">司机详细信息</h6>
+                
+            </div>
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">基本信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">手机号码：<span class="text-blue">{$info.mobile}</span></div>
+                    <div class="td w33">注册状态：{$info.is_audit|getAuditTxt}</div>
+                    <div class="td w33">启用状态：{$info.status|getUseTxt}</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <eq name="info.is_audit" value="0">
+                    <div class="td w33">司机姓名：<input type="text" name="driver_name" class="input w20" value="{$info.invite_name}" /> </div>
+                    <else/>
+                    <div class="td w33">司机姓名：<span>{$info.invite_name|default='-'}</span></div>
+                    </eq>
+
+                    <div class="td w33">司机类型：<span>{$info.type|getDriverType}</span></div>
+                    <div class="td w33">创建时间：<span>{$info.create_time|date='Y-m-d H:i', ###}</span></div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <eq name="info.is_audit" value="0">
+                    <div class="td w33">驾驶年龄：<input type="number" name="driver_age" class="input w20" value="{$info.driver_age}" /> 年</div>
+                    <else/>
+                    <div class="td w33">驾驶年龄：<span>{$info.driver_age|default='-'} 年</span></div>
+                    </eq>
+
+                    <div class="td w33">所属公司：<span>{$info.company_name}</span></div>
+                    <notempty name="info.login_time">
+                        <div class="td w33">登录时间：<span>{$info.login_time|date='Y-m-d H:i', ###}</span></div>
+                        <else/>
+                        <div class="td w33">登录时间：<span>--</span></div>
+                    </notempty>
+                </div>
+				 <if condition="$info.is_audit eq -1">
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w100">审核失败原因：<span>{$info.audit_because}</div>
+                    </div>
+                </if>
+            </div>
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">车辆信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">车牌号码：<span class="text-blue">{$info.license_sn}</span></div>
+                    <div class="td w33">身份证号码：<span class="text-blue">{$info.cart_id}</span></div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">可载人数：<span>{$info.car_load_num}</span>人</div>
+                    <div class="td w33">汽车排量：<span>{$info.car_engine}</span></div>
+                    <div class="td w33">注册时间：<span>{$info.car_reg_time|date='Y-m-d H:i', ###}</span></div>
+                </div>
+            </div>
+
+            <!--订单信息-->
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">相关图片</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w50">司机的图片：<a data-href="{$info.head_pic}" ><img onclick="getBigImg(this)" src="{$info.head_pic}" width="160" class="padding-top" /></a></div>
+                </div>
+
+
+
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w50">驾驶证：<a style="margin-left:25px;" data-href="{$info.license_pic_zm}" ><img onclick="getBigImg(this)" src="http://{$host}{$info.license_pic_zm}" width="160" class="padding-top" /></a></div>
+                    <div class="td w50">保单：<a style="margin-left:35px;" data-href="{$info.license_pic_fm}" ><img onclick="getBigImg(this)" src="http://{$host}{$info.license_pic_fm}" width="160" class="padding-top" /></a></div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w50">行驶证正本：<a data-href="{$info.xsz_zm}" ><img onclick="getBigImg(this)" src="http://{$host}{$info.xsz_zm}" width="160" class="padding-top" /></a></div>
+                    <div class="td w50">行驶证副本：<a data-href="{$info.xsz_fm}" ><img onclick="getBigImg(this)" src="http://{$host}{$info.xsz_fm}" width="160" class="padding-top" /></a></div>
+                </div>
+            </div>
+
+            <notempty name='driver'>
+                <div class="offcial-table input-table table-margin clearfix ">
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">邀请人信息</div>
+                    </div>
+                    <volist name='driver' id='der'>
+                        <div class="tr clearfix border-bottom padding-left-15">
+                            <div class="td w33">邀请人：{$der.invite_name}</div>
+                            <div class="td w33">联系电话：{$info.mobile}</div>
+                        </div>
+                    </volist>
+                </div>
+            </notempty>
+
+
+            <eq name="info.is_audit" value="0" >
+            <div class="tr clearfix padding-top" style="text-align:center">
+                <button type="button" class="button bg-green inlib-product audit" data-id="{$info.id}" data-type="1" >审核通过</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="button bg-red inlib-product audit" data-id="{$info.id}" data-type="2" >审核失败</button>
+            </div>
+            </eq>
+        </div>
+    </div>
+
+    <input type="hidden" id="audit_url" value="__URL__/audit">
+
+    <script>
+        function getBigImg(obj) {
+            var rt = 0;
+            var html = '<div class="shadeBox"><div><span class="ibox"><img src="' + $(obj).attr("src") + '"/><i></i></span></div></div>'
+            $("body").append(html)
+            $(".shadeBox").click(function (e) {
+                var o = $(e.target)
+                if (o.parents(".ibox").length < 1) {
+                    $(".shadeBox").remove()
+                }
+            })
+            $(".shadeBox i").click(function () {
+                rt += 90;
+                $(".shadeBox img").css({"transform": "rotate(" + rt + "deg)"})
+            })
+        }
+		/*审核通过*/
+        function Aduit($id, $type) {
+            driver_age = $(":input[name='driver_age']").val();
+            driver_name = $(":input[name='driver_name']").val();
+            if (driver_age.length == 0) {
+                msg('请填写驾驶年龄');
+                return false;
+            } else if (driver_name.length == 0) {
+                msg('请填写驾驶员姓名');
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "{:U('Home/Driver/Aduit',array(),'html',true)}",
+                data: {
+                    'id': $id,
+                    'type': $type
+                },
+                success: function (obj) {
+                    setTimeout(function () {
+                        layer.msg(obj.msg);
+                    }, 700);
+                    if (obj.code == 1) {
+                        window.location.reload();
+                    }
+                }
+            });
+            return false;
+        }
+        /*审核不通过*/
+        function Aduiterror($id, type) {
+            layer.open({
+                type: 2,
+                title: '审核不通过原因',
+                shadeClose: true,
+                shade: 0.8,
+                skin: 'layui-layer-title-jxc',
+                area: ['50%', '250px'],
+                content: '/Home/Driver/Aduiterror/id/' + $id, //"{:U('Driver/Aduiterror',['id'=>$id],'html',true)}",
+            })
+        }
+        /*弃审*/
+        function unAduit($status) {
+            if ($status == 0) {
+                msg('已弃审的信息无须重复弃审');
+                window.location.reload();
+                return false;
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "{:U('Home/Driver/unAduit')}", //AuditView
+                    data: {
+                        'id': "{$info.id}"
+                    },
+                    success: function (obj) {
+                        msg(obj.msg);
+                        if (obj.code == 1) {
+                            window.location.href = "{:U('driver_list')}";
+                        }
+                        return false;
+                    }
+                });
+                return false;
+            }
+        }
+    </script>
+    <style>
+        .shadeBox{position:fixed; z-index:1000;left:0;top:0; width:100%;height:100%;background:rgba(0,0,0,0.5); text-align: center; display: table}
+        .shadeBox div{display:table-cell; text-align:center;vertical-align: middle; width:100%;height:100%;}
+        .shadeBox div span{ position: relative; z-index: 1000;}
+        .shadeBox div span i{ position: absolute; z-index: 1001; width: 50px; height: 50px;  left: 50%; top: 50%; margin:-25px 0 0 -25px;
+                              background:url('http://app.yckche.com/Public/client/images/xz.png') center center no-repeat; background-size: 100% 100%;
+        }
+        .shadeBox img{ width: 500px; vertical-align: middle; position: relative;z-index: 1000}
+    </style>
+</block>

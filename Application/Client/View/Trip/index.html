@@ -1,0 +1,97 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="search_style table-margin">
+                <div class="title_names text-blue">行程列表信息</div>
+                <form action="{:U('','','html',true)}" method='get'>
+                    <ul class="search_content clearfix">
+                        <li class='w30'>
+                            <input type="text" placeholder=" 请填写行程单号或手机号和司机姓名" name='keywords' value="{$keywords}" class="w100 height34 border" id="order_sn">
+                        </li>
+                        <a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a>
+                        <li class=''><button class="btn_search button bg-blue" id="search"><i class="fa fa-search"></i> 搜索</button></li>
+                        <li class=''><a href="{:U()}"><button class="btn_search button bg-orange">刷新</button></a></li>
+                    </ul>
+                </form>
+            </div>
+
+            <div class="table-margin ">
+                <notempty  name="list">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+							<th class="w20">编号</th>
+                            <th class="w20">订单编号</th>
+                            <th class="">司机姓名</th>
+                            <th class="">联系方式</th>
+                            <th class="">发车类型</th>
+                            <th class="">是否预约</th>
+                            <th class="">订单状态</th>
+                            <th class="w15">发车时间</th>
+                            <th class="w10">操作</th>
+                        </tr>
+
+                        <tbody id="itemContainer">
+                        <volist name="list" id="item">
+                            <tr class="list">
+								<td>{$i}</td>
+                                <td>{$item.order_sn}</td>
+                                <td>{$item.invite_name|default='-'}</td>
+                                <td>{$item.link_phone}</td>
+                                <td>{$item.type|sendType=1}</td>
+                            <eq name="item.is_yy" value="1">
+                            <td class="text-green">是</td>
+                            <else/>
+                            <td class="text-red">否</td>
+                            </eq>
+
+                            <td>{$item.status|serviceStatus}
+                                <eq name="item.dj_status" value="1" ><span class="text-red"> [待回款]</span></eq>
+                            </td>
+                            <notempty name="item.departur_day">
+                                <td>{$item.departur_day}</td>
+                                <else/>
+                                <td>--</td>
+                            </notempty>
+
+                            <td>
+                                <a href="__URL__/info/service_id/{$item['id']}" class="btn btn-success btn-small">查看详细信息</a>
+                            </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:18px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+            <!-- fpage -->
+            <div class="page">{$fpage}</div>
+        </div>
+    </div>
+
+    <input type="hidden" id="url" value="{$url}" />
+
+    <script>
+
+        $(function () {
+            search();
+        })
+
+
+        function search() {
+            $('body').on('click', '#search', function () {
+                var order_sn = $('#order_sn').val();
+                var url = $('#url').val();
+
+                url = changeURLArg(url, 'order_sn', order_sn);
+
+                window.location.href = url;
+            });
+        }
+
+    </script>
+
+</block>
+

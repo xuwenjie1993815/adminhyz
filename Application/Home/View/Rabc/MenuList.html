@@ -1,0 +1,105 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="search_style table-margin">
+                <div class="title_names text-blue">顶部菜单管理(请不要轻易改动)</div>
+                
+                <ul class="search_content clearfix">
+                    <li style="float: right">
+                        <a href="javascript:void(0)" data-url="__URL__/MenuAdd" onclick="open_layer(this, '请输入菜单名称', '50%', '340px')"  class="btn btn-warning btn-small">添加菜单</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="table-margin ">
+                <notempty  name="list">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+                            <!--<th class="">编号</th>-->
+                            <th class="w10">菜单ID</th>
+                            <th class="w10">菜单名</th>
+                            <th class="w10">顺序号</th>
+                            <th class="w15">操作</th>
+                        </tr>
+
+                        <tbody id="itemContainer">
+                        <volist name="list" id="item">
+                            <tr class="list">
+                                <!--<td>{$item.id}</td>-->
+                                <td>{$item.id}</td>
+                                <td>{$item.name}</td>
+                                <td>{$item.sort}</td>
+                                <td>
+                                    <a href="javascript:void(0)" data-url="__URL__/MenuEdit/id/{$item['id']}" onclick="open_layer(this, '请输入菜单名称', '50%', '340px')"  class="btn btn-warning btn-small">修改</a>
+                                    | <a href="javascript:void(0)" class="btn btn-info btn-small use" onClick="javascript:return del('{$item.id}')">删除</a>
+                                    | <a  data-url="__URL__/NodeUpdate/id/{$item['id']}" onclick="open_layer(this, '编辑节点', '50%', '340px')" class="btn btn-success use" onClick="javascript:return del('{$item.id}')">添加节点</a>
+                                    <!--
+                                    <eq name="item.status" value="1">
+                                        | <a href="javascript:void(0)" data-id="{$item['id']}" data-url="__URL__/start" class="btn btn-info btn-small use">停用</a>
+                                        <else/>
+                                        | <a href="javascript:void(0)" data-id="{$item['id']}" data-url="__URL__/start" class="btn btn-warning btn-small use">启用</a>
+                                    </eq>
+                                    -->
+                                </td>
+                                
+                            </tr>
+                        </volist>
+                        </tbody>
+
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:18px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+            <!-- fpage -->
+            <div class="page">{$fpage}</div>
+        </div>
+    </div>
+
+    <script>
+
+        function del($id){
+            $.ajax({
+                type:'POST',
+                url:"{:U('MenuDel')}",
+                data:{'id':$id},
+                dataType:'json',
+                success:function(obj) {
+                    msg(obj.msg);
+                    if(obj.status){redirect(window.location.href)}
+                    return false;
+                }
+            });
+        }
+        
+        function open_layer(obj, title, width, height) {
+            var url = $(obj).data('url');
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                skin: 'layui-layer-title-jxc',
+                area: [width, height],
+                content:url,
+            });
+        }
+        
+        function close_layer(msg) {
+            if (msg) {
+                setTimeout(function () {
+                    layer.closeAll('iframe');
+                }, 500);
+                layer.msg(msg);
+                window.location.reload();
+            } else {
+                layer.closeAll('iframe');
+            }
+        }
+
+    </script>
+
+
+</block>
+

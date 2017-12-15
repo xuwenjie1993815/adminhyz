@@ -1,0 +1,35 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+
+            <div class="manage-head">
+                <h6 class="padding-left manage-head-con">乘客详细信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+            </div>
+
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">基本信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">手机号码：<span class="text-blue">{$info.mobile}</span></div>
+                    <div class="td w33">乘客昵称：{$info.nick_name|default='-'}</div>
+                    <div class="td w33">启用状态：{$info.status|getUseTxt}</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">收入总额：{$info.income} 元</div>
+                    <div class="td w33">提现总额：{$info.spend} 元</div>
+                    <div class="td w33">剩余金额：{$info['income'] - $info.spend} 元</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">乘客等级：<span>{$info.level|userLevel}</span></div>
+                    <div class="td w33">创建时间：<span>{$info.create_time|date='Y-m-d H:i:s', ###}</span></div>
+                    <div class="td w33">登录时间：<span>{$info.login_time|date='Y-m-d H:i:s', ###}</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</block>

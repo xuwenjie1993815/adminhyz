@@ -1,0 +1,18 @@
+.holder { margin-top:20px; float:right;}
+
+.holder a { display:inline-block; border:1px solid #CED1D8; background:#fff; color:#666;}
+
+.holder a:hover { display:inline-block; border:1px solid #CED1D8; background:#fff; color:#666; cursor:pointer;}
+
+.holder a.jp-previous { margin-right: 15px; }
+.holder a.jp-next { margin-left: 15px; }
+
+.holder a.jp-current, a.jp-current:hover { display:inline-block; border:1px solid #CED1D8; background:#fff; color:#666;}
+
+.holder a.jp-disabled, a.jp-disabled:hover { display:inline-block; border:1px solid #CED1D8; background:#fff; color:#666;}
+
+.holder a.jp-current, a.jp-current:hover,
+.holder a.jp-disabled, a.jp-disabled:hover { display:inline-block; border:1px solid #CED1D8; background:#fff; color:#666;}
+
+.holder span { color:#666; padding-right:3px;}
+a.jp-current{background:red !important; color:#fff !important;}

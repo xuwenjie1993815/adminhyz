@@ -1,0 +1,88 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <form id="ff">
+            <div class="info-center">
+
+                <div class="manage-head">
+                    <h6 class="padding-left manage-head-con">积分比例设置</h6>
+                </div>
+
+                <div class="offcial-table input-table table-margin clearfix ">
+
+                    <div class="tr-th clearfix ">
+                        <div class="th w100 padding-left-15">积分设置</div>
+                    </div>
+
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w20">注册赠送积分：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.z_integral}" style="width:100px;" class="input" name="z_integral"/></span> </div>
+                    </div>
+
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w20">消费积分：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.x_integral}" style="width:100px;" class="input" name="x_integral"/></span> 积分</div>
+                        <div class="td w20">抵消金额：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.d_money}" style="width:100px;" class="input" name="d_money"/></span> 元</div>
+                        <div class="td w20" style="color: red;">请输入大于1000的消费积分和小于5的抵消金额</div>
+                    </div>
+
+                    <div class="tr clearfix border-bottom padding-left-15">
+                        <div class="td w20">支付金额：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.zf_money}" style="width:100px;" class="input" name="zf_money"/></span> 元</div>
+                        <div class="td w20">赠送积分：&nbsp;&nbsp;&nbsp;<span style="line-height:30px;padding-left:5px;"><input type="number" value="{$info.zs_integral}" style="width:100px;" class="input" name="zs_integral"/></span> 积分</div>
+                        <div class="td w20" style="color: red;">请输入大于50的支付金额和大于500的赠送积分</div>
+                    </div>
+
+                </div>
+
+                <!--操作按钮 start-->
+                <div class="text-center padding-top">
+                    <div class="td w80">
+                        <button type="button" class="button bg-blue inlib-product" id="sub">提交</button>
+                    </div>
+                </div>
+                <!--操作按钮 end -->
+
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var data, confirm, load, _this;
+
+        $(function () {
+            sub();
+        })
+
+        function sub() {
+            $('body').on('click', '#sub', function () {
+                _this = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    data: $('#ff').serialize(),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        _this.prop('disabled', 'true');
+                        load = layer.load(2);
+                    },
+                    success: function (obj) {
+                        msg(obj.msg);
+                        if (obj.status) {
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 800);
+                        }
+                    },
+                    complete: function () {
+                        _this.prop('disabled', '');
+                        layer.close(load);
+                    },
+                    error: function () {
+                        msg('系统繁忙');
+                    }
+                });
+            });
+        }
+
+    </script>
+
+</block>

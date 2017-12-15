@@ -1,0 +1,146 @@
+<extend name="../../Home/View/Public/base" />
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+            <div class="search_style table-margin">
+                <div class="title_names text-blue">司机列表信息</div>
+                <form action="{:U('','','html',true)}" method='get'>
+                    <ul class="search_content clearfix">
+                        <li class='w50'>
+                            <laber>支付时间</laber>
+                            <span style="margin-left: 20px;">起<input style="margin-left: 5px;" type="text" id="LAY_demorange_s" name="start_time" value="{$start_time}" class="border w25 status"/></span>
+                            <span style="margin-left: 20px;">止<input style="margin-left: 5px;" type="text" id="LAY_demorange_e" name="end_time" value="{$end_time}" class="border w25 status"/></span>
+                        </li>
+                        <a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a>
+                        <li class=''><button class="btn_search button bg-blue" id="search"><i class="fa fa-search"></i> 搜索</button></li>
+                        <li class=''><a href="{:U()}"><button class="btn_search button bg-orange">刷新</button></a></li>
+                    </ul>
+                </form>
+            </div>
+
+            <div class="table-margin ">
+                <notempty  name="info">
+                    <table class="table table-hover">
+                        <tr class="table-header border">
+                            <th class="w10">编号</th>
+                            <th class="w10">姓名</th>
+                            <!--<th class="w20">交易类型</th>-->
+                            <th class="w20">交易时间</th>
+                            <th class="w10">收支金额</th>
+                            <th class="w20">订单号</th>
+                            <!--<th class="w10">操作</th>-->
+                        </tr>
+
+                        <tbody id="itemContainer">
+                        <volist name="info" id="item">
+                            <tr class="list">
+                                <td>{$i}</td>
+                                <td>{$item.invite_name|default='-'}</td>
+                                <!--<td>{$item.tradetypes}</td>-->
+                                <td>{$item.tradetime}</td>
+                                <td>{$item.money}</td>
+                                <td>{$item.order_sn}</td>
+                            </tr>
+                        </volist>
+                        </tbody>
+
+                    </table>
+                    <else/>
+                    <div style="text-align:center"><span style="color:#CCCCCC;font-size:28px">没有符合条件的记录</span></div>
+                </notempty >
+            </div>
+            <!-- fpage -->
+            <div class="page">{$fpage}</div>
+        </div>
+    </div>
+
+    <input type="hidden" id="url" value="{$url}" />
+
+    <script>
+
+        $(function () {
+            search();
+            use();
+        })
+
+
+
+        function use() {
+            $('body').on('click', '.use', function () {
+
+                var _this = $(this);
+                var load;
+
+                $.ajax({
+                    type: 'POST',
+                    url: _this.data('url'),
+                    data: {'driver_id': _this.data('id')},
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('body').off('click', '.use');
+                        load = layer.load(2);
+                    },
+                    success: function (obj) {
+                        msg(obj.msg);
+                        if (obj.status) {
+                            redirect(window.location.href)
+                        }
+                    },
+                    complete: function () {
+                        use();
+                        layer.close(load);
+                    },
+                    error: function () {
+                        msg('系统繁忙');
+                    }
+                });
+
+            });
+        }
+        layui.use(['laypage', 'layer','laydate'], function(){
+            var laypage = layui.laypage;
+            var allpage = $("#allpage").val();
+            var laydate = layui.laydate;
+
+            var start = {
+                min : '2016-01-01 00:00 ;00',
+                max : '2099-12-30 00:00 00',
+                istoday : false,
+                choose : function(datas){
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            }
+            var end = {
+                min : laydate.now(),
+                max : '2099-12-30 00:00 00',
+                istoday : false,
+                choose : function(datas){
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            }
+            document.getElementById('LAY_demorange_s').onclick = function(){
+                start.elem = this;
+                laydate(start);
+            }
+            document.getElementById('LAY_demorange_e').onclick = function(){
+                end.elem = this;
+                laydate(end);
+            }
+        })
+        function search() {
+            $('body').on('click', '#search', function () {
+                var mobile = $('#mobile').val();
+
+                var url = $('#url').val();
+                url = changeURLArg(url, 'mobile', mobile);
+
+                window.location.href = url;
+            });
+        }
+
+    </script>
+
+
+</block>
+

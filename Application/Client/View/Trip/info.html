@@ -1,0 +1,88 @@
+<extend name="../../Home/View/Public/base" />
+
+<block name="page-content">
+    <div class="view-product">
+        <div class="info-center">
+
+            <div class="manage-head">
+                <h6 class="padding-left manage-head-con">行程详细信息<a href="javascript:history.go(-1)" class="button fr margin-right-75">返回</a></h6>
+            </div>
+
+            <div class="offcial-table input-table table-margin clearfix ">
+                <div class="tr-th clearfix ">
+                    <div class="th w100 padding-left-15">基本信息</div>
+                </div>
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">订单编号：<span class="text-blue">{$info.order_sn}</span></div>
+                    <div class="td w33">联系方式：{$info.link_phone}</div>
+                    <div class="td w33">当前状态：{$info.status|serviceStatus}
+                    <eq name="info.dj_status" value="1" ><span class="text-red"> [待回款]</span></eq>
+                    </div>
+                </div>
+
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">人头单价：<span class="">{$info.price}</span> 元</div>
+                    <div class="td w33">剩余座位：<span class="">{$info.block}</span></div>
+                    <div class="td w33">发车类型：{$info.type|sendType=1}</div>
+                </div>
+
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w33">车牌号码：<span class="">{$info.license_sn}</span></div>
+                    <div class="td w33">创建时间：{$info.create_time|date='Y-m-d H:i:s', ###}</div>
+                    <notempty name="info.departur_time" >
+                        <div class="td w33">发车时间：{$info.departur_time|date='Y-m-d H:i:s', ###}</div>
+                        <else/>
+                        <div class="td w33">发车时间：--</div>
+                    </notempty>
+                </div>
+
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w99">
+                        起始地点：{$info.start_city} [ <span class="text-blue">{$info.start_point}</span> ]
+                        <span class="text-yellow-deep">——></span>
+                        {$info.purpose_city} [ <span class="text-blue">{$info.purpose_point}</span> ]
+                    </div>
+                </div>
+
+                <div class="tr clearfix border-bottom padding-left-15">
+                    <div class="td w99">备注信息：{$info.remark|default='-'}</div>
+                </div>
+            </div>
+
+            <div class="input-table table-margin clearfix ">
+                <table class="table table-hover">
+                    <tr class="table-header border">
+                        <th class="w15">订单编号</th>
+                        <th class="">乘客昵称</th>
+                        <th class="">乘客电话</th>
+                        <th class="">座位</th>
+                        <th class="">订单状态</th>
+                        <th class="">支付方式</th>
+                        <th class="">订单金额</th>
+                        <th class="w15">备注信息</th>
+                        <th class="w15">下单时间</th>
+                    </tr>
+
+                    <tbody id="itemContainer">
+                        <volist name="info.order_list" id="v">
+                        <tr class="list">
+                            <td>{$v.order_sn}</td>
+                            <td>{$v.nick_name|default='-'}</td>
+                            <td>{$v.mobile}</td>
+                            <td>{$v.seat_num}</td>
+                            <td><span class="text-blue">{$v.status|orderStatus}</span></td>
+                            <td>{$v.pay_mothod|payMethod}</td>
+                            <td>{$v.money}</td>
+                            <td>{$v.remark|default='-'}</td>
+                            <td>{$v.create_time|date='Y-m-d H:i:s', ###}</td>
+                        </tr>
+                        </volist>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</block>
